@@ -1,2 +1,2 @@
 # Tetris
-This is a tetris game
+Description is in WIP
