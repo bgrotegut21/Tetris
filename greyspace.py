@@ -8,4 +8,3 @@ class GreyBlock(Sprite):
         self.screen_rect = self.screen.get_rect()
         self.image = pygame.image.load("Images/greysquare.jpg")
         self.rect = self.image.get_rect()
-        self.rect.topright = self.screen_rect.topright
