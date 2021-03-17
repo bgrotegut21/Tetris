@@ -2,6 +2,7 @@ import pygame
 import sys
 from settings import Settings
 from greyspace import GreyBlock   
+from board import Board
 
 class Main:
     def __init__(self):
@@ -95,7 +96,13 @@ class Main:
                 self.grey_blocks.add(square)
     
     def create_board(self, block_width, block_height):
-        pass
+        for height number in range(block_height):
+            for width_number in range(block_width):
+                board =  Board(self)
+                square = GreyBlock(self)
+                
+                board.rect - sel
+
     
         
     def update_game(self):
