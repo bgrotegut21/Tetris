@@ -22,11 +22,40 @@ class Main:
     def _create_greyblocks(self):
         block = GreyBlock(self)
         screen_block_space = self.screen_rect.width//block.rect.width
-        right_blockspacce = screen_block_space//2
-        screen_block_fill_space = right_blockspace - (5* block.rect.width)
+        right_blockspace = screen_block_space//2
+        screen_block_fill_space = right_blockspace - 5
         screen_blockheight_space = self.screen_rect.height//block.rect.width
+        screen_fill_bottom_space = screen_blockheight_space  - 10
+        screen_left_width = screen_block_fill_space
+        screen_right_with = screen_block_fill_space
+        
+        if  not screen_block_fill_space % 2 == 0:
+            screen_right_width = screen_block_fill_space + 1
+            screen_left_width = screen_block_fill_space -1
+        
+        self._create_left_blocks(screen_block_fill_space,screen_blockheight_space)
+        self._create_right_blocks(screen_block_fill_space,screen_blockheight_space)
+
+        self._create_top_blocks(10,screen_fill_bottom_space)
+    
+    def _create_top_blocks(self,block_width, block_height):
+        for height_number in range(block_height):
+            for width_number in range(block_width):
+                square = GreyBlock(self)
+                screen_block_space = self.screen_rect.width//square.rect.width
+                right_blockspace = screen_block_space//2
+
+                screen_block_fill_space = right_blockspace -5
+                starting_position = self.screen_rect.topleft[0]+ (screen_block_fill_space * square.rect.width)
+
+                square.rect.x = starting_position + (width_number * square.rect.width)
+                square.rect.y = square.rect.height + (height_number * square.rect.height)
+
+
+                self.grey_blocks.add(square)
         
     def _create_right_blocks(self,block_width, block_height):
+        print(block_width)
         for height_number in range(block_height):
             for width_number in range(block_width):
                 square = GreyBlock(self)
@@ -35,6 +64,7 @@ class Main:
                 self.grey_blocks.add(square)
 
     def _create_left_blocks(self,block_width, block_height):
+        print(block_width)
         for height_number in range(block_height):
             for width_number in range(block_width):
                 square = GreyBlock(self)
