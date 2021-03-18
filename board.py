@@ -2,7 +2,8 @@ import pygame
 from pygame.sprite import Sprite
 
 class Board(Sprite):
-    def __init__(self,self):
+    def __init__(self,game):
+        suoer().__init__()
         self.settings = game.settings
         self.screen = game.screen
         self.rect = pygame.Rect(0,0,20,20)

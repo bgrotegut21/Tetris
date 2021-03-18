@@ -1,8 +1,10 @@
+
 import pygame
 import sys
 from settings import Settings
 from greyspace import GreyBlock   
-from board import Board
+from  board import Board
+
 
 class Main:
     def __init__(self):
@@ -10,7 +12,7 @@ class Main:
         self.settings = Settings()
         self.backgroundcolor = self.settings.backgroundcolor
         pygame.display.set_caption("Tetris")
-        self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((1920,1080))
         self.screen_rect = self.screen.get_rect()
         self.grey_blocks = pygame.sprite.Group()
         self._create_greyblocks()
@@ -27,7 +29,7 @@ class Main:
         screen_block_fill_space = right_blockspace - 5
         screen_blockheight_space = (self.screen_rect.height//block.rect.width) 
         screen_fill_bottom_space = screen_blockheight_space//2
-        screen_fill_bottom_cubes = screen_fill_bottom_space  - 10
+        screen_fill_bottom_cubes = screen_fill_bottom_space  - 10       
         screen_left_width = screen_block_fill_space
         screen_right_width = screen_block_fill_space
         
@@ -95,13 +97,25 @@ class Main:
                 square.rect.y = self.screen_rect.topright[1] + (height_number * square.rect.height)
                 self.grey_blocks.add(square)
     
-    def create_board(self, block_width, block_height):
-        for height number in range(block_height):
+    def _create_board(self, block_width, block_height):
+        square = GreyBlock(self)
+        screen_block_space = self.screen_rect.width//square.rect.width
+        screen_blockheight_space = self.screen_rect.width // square.rect.height
+        screen_fill_bottom_space = screen_blockheight_space//2
+        screen_fill_bottom_cubes = screen_fill_bottom_space  - 10
+        right_blockspace = screen_block_space//2
+        board_xposition = right_blockspace + 11
+        board_yposition = screen_fill_bottom_cubes + 6
+
+        board_starting_xposition = self.screen_rect.topleft[0] + (board_xposition * square.rect.width)
+        board_starting_yposition = self.screen_rect.topleft[1] + (board_yposition * square.rect.height)
+
+        for height_number in range(block_height):
             for width_number in range(block_width):
-                board =  Board(self)
-                square = GreyBlock(self)
-                
-                board.rect - sel
+                board = Board(self)
+                board.rect.x = board_starting_xposition + (width_number * board.rect.width)
+                board.rect.y = board_starting_yposition + (height_number * board.rect.height)
+                self.grey_blocks.add(board)
 
     
         
