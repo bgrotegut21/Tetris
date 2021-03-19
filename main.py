@@ -17,6 +17,7 @@ class Main:
         self.grey_blocks = pygame.sprite.Group()
         self.board = pygame.sprite.Group()
         self._create_greyblocks()
+        self.current_tetrimino = []
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
