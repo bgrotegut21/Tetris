@@ -10,32 +10,29 @@ class S_Tetrimnio:
         super().__init__()
         self.screen = game.screen
         self.settings = game.settings
+        self.screen_rect = self.screen.get_rect()
         self.straight_tetrimnio = pygame.sprite.Group()
-        self.down_movement = False
-        self.right_movment = False
-        self.left_movement = False
+
 
     def add_tetrimnio(self):
         for num in range(4):
-            orange_block = GreyBlock(self,"images/orangesquare.jpg")
+            orange_block = GreyBlock(self,"images/redsquare.bmp")
             center_position = self.settings.screen_block_face + 2
-            starting_position = self.screen_rect.topleft[0] + (center_position * orange_block.rect.width)
+            starting_position = self.screen_rect.topleft[0] + (center_position * orange_block.rect.width) 
             orange_block.rect.x = starting_position + (num * orange_block.rect.width)
             orange_block.rect.y = self.settings.square_yposition 
             self.straight_tetrimnio.add(orange_block)
     
-    def update(self):
-        if right_movment:
+    def movement(self):
+        if self.settings.right_movement:
+            for block in self.straight_tetrimnio:
+                block.rect.x += 10
+        if self.settings.left_movement:
             for block in self.straight_tetrimnio:
                 x_cord = block.rect.x
                 x_cord += self.settings.tetrimino_speed
-                block.rect.x += x_cord
-        if left_movement:
-            for block in self.straight_tetrimnio:
-                x_cord = block.rect.x
-                x_cord += self.settings.tetrimino_speed
-                block.rect.x += -x_cord
-        if down_movement:
+                block.rect.x = -x_cord
+        if self.settings.down_movement:
             for block in self.straight_tetrimnio:
                 y_cord = block.rect.y
                 y_cord += self.settings.tetrimino_speed

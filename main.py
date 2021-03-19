@@ -10,24 +10,46 @@ from tetrimino import S_Tetrimnio
 class Main:
     def __init__(self):
         pygame.init()
-        self.settings = Settings()
-        self.backgroundcolor = self.settings.backgroundcolor
         pygame.display.set_caption("Tetris")
         self.screen = pygame.display.set_mode((1920,1080))
         self.screen_rect = self.screen.get_rect()
         self.grey_blocks = pygame.sprite.Group()
         self.board = pygame.sprite.Group()
+        self.settings = Settings(self)
         self._create_greyblocks()
         self.s_tetrimnio = S_Tetrimnio(self)
-        self.s_tetrimnio.
+        self.s_tetrimnio.add_tetrimnio()
+        self.backgroundcolor = self.settings.backgroundcolor
+        
         self.current_tetrimino = []
 
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    sys.exit()
+                self._check_keydown_events(event.key)
+            if event.type == pygame.KEYUP:
+                self._check_keyup_events(event.key)
 
+    def _check_keydown_events(self,event):
+        if event == pygame.K_q:
+            sys.exit()
+        if event == pygame.K_RIGHT:
+            print("key pressed")
+            self.settings.right_movement == True
+        if event == pygame.K_LEFT:
+            self.settings.left_movement == True
+        if event == pygame.K_DOWN:
+            self.settings.down_movement == True
+        if event == pygame.K_UP:
+            pass
+    
+    def _check_keyup_events(self,event):
+        if event == pygame.K_RIGHT:
+            self.settings.right_movement == False
+        if event == pygame.K_LEFT:
+            self.settings.left_movement == False
+        if event == pygame.K_DOWN:
+            self.settings.down_movement == False
     def _create_greyblocks(self):
         block = GreyBlock(self)
         screen_block_space = self.screen_rect.width//block.rect.width
@@ -132,7 +154,8 @@ class Main:
         self.screen.fill((33,33,33))
         self.grey_blocks.draw(self.screen)
         self.draw_board()
-        self.tetrimino.straight_tetrimnio.draw(self.screen)
+        self.s_tetrimnio.movement()
+        self.s_tetrimnio.draw_tetrimino()
         pygame.display.flip()
 
     
