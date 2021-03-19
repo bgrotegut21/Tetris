@@ -15,6 +15,7 @@ class Main:
         self.screen = pygame.display.set_mode((1920,1080))
         self.screen_rect = self.screen.get_rect()
         self.grey_blocks = pygame.sprite.Group()
+        self.board = pygame.sprite.Group()
         self._create_greyblocks()
     def check_events(self):
         for event in pygame.event.get():
@@ -45,6 +46,7 @@ class Main:
 
         self._create_top_blocks(10,screen_fill_bottom_cubes)
         self._create_bottom_blocks(10,screen_fill_bottom_cubes)
+        self._create_board(6,4)
     
     def _create_top_blocks(self,block_width, block_height):
         for height_number in range(block_height):
@@ -108,20 +110,23 @@ class Main:
         board_yposition = screen_fill_bottom_cubes + 6
 
         board_starting_xposition = self.screen_rect.topleft[0] + (board_xposition * square.rect.width)
-        board_starting_yposition = self.screen_rect.topleft[1] + (board_yposition * square.rect.height)
+        board_starting_yposition = self.screen_rect.topright[1] + (board_yposition * square.rect.height)
 
         for height_number in range(block_height):
             for width_number in range(block_width):
                 board = Board(self)
                 board.rect.x = board_starting_xposition + (width_number * board.rect.width)
                 board.rect.y = board_starting_yposition + (height_number * board.rect.height)
-                self.grey_blocks.add(board)
-
+                self.board.add(board)
     
+    def draw_board(self):
+        for board in self.board:
+            board.display_board()
         
     def update_game(self):
         self.screen.fill((33,33,33))
         self.grey_blocks.draw(self.screen)
+        self.draw_board()
         pygame.display.flip()
 
     
