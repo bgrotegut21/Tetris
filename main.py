@@ -4,6 +4,7 @@ import sys
 from settings import Settings
 from greyspace import GreyBlock   
 from  board import Board
+from tetrimino import S_Tetrimnio
 
 
 class Main:
@@ -17,7 +18,10 @@ class Main:
         self.grey_blocks = pygame.sprite.Group()
         self.board = pygame.sprite.Group()
         self._create_greyblocks()
+        self.s_tetrimnio = S_Tetrimnio(self)
+        self.s_tetrimnio.
         self.current_tetrimino = []
+
     def check_events(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -128,6 +132,7 @@ class Main:
         self.screen.fill((33,33,33))
         self.grey_blocks.draw(self.screen)
         self.draw_board()
+        self.tetrimino.straight_tetrimnio.draw(self.screen)
         pygame.display.flip()
 
     
