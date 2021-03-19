@@ -104,13 +104,13 @@ class Main:
         screen_block_space = self.screen_rect.width//square.rect.width
         screen_blockheight_space = self.screen_rect.width // square.rect.height
         screen_fill_bottom_space = screen_blockheight_space//2
-        screen_fill_bottom_cubes = screen_fill_bottom_space  - 10
+        screen_fill_bottom_cubes = screen_fill_bottom_space  - 33
         right_blockspace = screen_block_space//2
         board_xposition = right_blockspace + 11
         board_yposition = screen_fill_bottom_cubes + 6
 
         board_starting_xposition = self.screen_rect.topleft[0] + (board_xposition * square.rect.width)
-        board_starting_yposition = self.screen_rect.topright[1] + (board_yposition * square.rect.height)
+        board_starting_yposition = self.screen_rect.topleft[1] + (board_yposition * square.rect.height)
 
         for height_number in range(block_height):
             for width_number in range(block_width):
