@@ -13,7 +13,10 @@ class Main:
         pygame.display.set_caption("Tetris")
         self.screen = pygame.display.set_mode((1920,1080))
         self.screen_rect = self.screen.get_rect()
-        self.grey_blocks = pygame.sprite.Group()
+        self.grey_right_blocks = pygame.sprite.Group()
+        self.grey_left_blocks = pygame.sprite.Group()
+        self.grey_up_blocks = pygame.sprite.Group()
+        self.grey_down_blocks = pygame.sprite.Group()
         self.board = pygame.sprite.Group()
         self.settings = Settings(self)
         self._create_greyblocks()
@@ -35,21 +38,23 @@ class Main:
             sys.exit()
         if event == pygame.K_RIGHT:
             print("key pressed")
-            self.settings.right_movement == True
+            self.settings.right_movement = True
         if event == pygame.K_LEFT:
-            self.settings.left_movement == True
+            self.settings.left_movement = True
         if event == pygame.K_DOWN:
-            self.settings.down_movement == True
+            self.settings.down_movement = True
         if event == pygame.K_UP:
-            pass
-    
+            self.settings.up_movement =  True
     def _check_keyup_events(self,event):
         if event == pygame.K_RIGHT:
-            self.settings.right_movement == False
+            self.settings.right_movement = False
         if event == pygame.K_LEFT:
-            self.settings.left_movement == False
+            self.settings.left_movement = False
         if event == pygame.K_DOWN:
-            self.settings.down_movement == False
+            self.settings.down_movement = False
+        if event == pygame.K_UP:
+            self.settings.up_movement = False
+
     def _create_greyblocks(self):
         block = GreyBlock(self)
         screen_block_space = self.screen_rect.width//block.rect.width
@@ -89,7 +94,7 @@ class Main:
                 square.rect.y = self.screen_rect.topleft[1] + (height_number * square.rect.height)
 
 
-                self.grey_blocks.add(square)
+                self.grey_up_blocks.add(square)
     
     def _create_bottom_blocks(self,block_width, block_height):
         for height_number in range(block_height):
@@ -105,7 +110,7 @@ class Main:
                 square.rect.y = self.screen_rect.bottomleft[1] - (height_number * square.rect.height)
 
 
-                self.grey_blocks.add(square)
+                self.grey_down_blocks.add(square)
         
         
     def _create_right_blocks(self,block_width, block_height):
@@ -115,7 +120,7 @@ class Main:
                 square = GreyBlock(self)
                 square.rect.x = self.screen_rect.topright[0] - (width_number * square.rect.width)
                 square.rect.y = self.screen_rect.topright[1] + (height_number * square.rect.height)
-                self.grey_blocks.add(square)
+                self.grey_right_blocks.add(square)
 
     def _create_left_blocks(self,block_width, block_height):
         print(block_width)
@@ -124,7 +129,7 @@ class Main:
                 square = GreyBlock(self)
                 square.rect.x = self.screen_rect.topleft[0] + (width_number * square.rect.width)
                 square.rect.y = self.screen_rect.topright[1] + (height_number * square.rect.height)
-                self.grey_blocks.add(square)
+                self.grey_left_blocks.add(square)
     
     def _create_board(self, block_width, block_height):
         square = GreyBlock(self)
@@ -151,8 +156,12 @@ class Main:
             board.display_board()
         
     def update_game(self):
-        self.screen.fill((33,33,33))
-        self.grey_blocks.draw(self.screen)
+        self.screen.fill((33,33,33)) 
+
+        self.grey_right_blocks.draw(self.screen)
+        self.grey_left_blocks.draw(self.screen)
+        self.grey_up_blocks.draw(self.screen)
+        self.grey_down_blocks.draw(self.screen)
         self.draw_board()
         self.s_tetrimnio.movement()
         self.s_tetrimnio.draw_tetrimino()
