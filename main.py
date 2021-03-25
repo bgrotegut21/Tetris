@@ -52,8 +52,6 @@ class Main:
             self.settings.left_movement = False
         if event == pygame.K_DOWN:
             self.settings.down_movement = False
-        if event == pygame.K_UP:
-            self.settings.up_movement = False
 
     def _create_greyblocks(self):
         block = GreyBlock(self)
@@ -164,7 +162,7 @@ class Main:
         self.grey_down_blocks.draw(self.screen)
         self.draw_board()
         self.s_tetrimnio.movement()
-        self.s_tetrimnio.draw_tetrimino()
+        self.s_tetrimnio.blit_tetrimino()
         pygame.display.flip()
 
     

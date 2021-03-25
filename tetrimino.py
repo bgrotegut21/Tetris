@@ -11,12 +11,13 @@ class S_Tetrimnio:
         self.screen = game.screen
         self.settings = game.settings
         self.screen_rect = self.screen.get_rect()
-        self.straight_tetrimnio = pygame.sprite.Group()
+        self.straight_tetrimino = []
         self.grey_up_blocks = game.grey_up_blocks
         self.grey_down_blocks = game.grey_down_blocks
         self.grey_right_blocks = game.grey_right_blocks
         self.grey_left_blocks = game.grey_left_blocks
         self.last_time = pygame.time.get_ticks()
+        self.second_position = False
 
 
     def add_tetrimnio(self):
@@ -28,42 +29,63 @@ class S_Tetrimnio:
             orange_block.rect.y = self.settings.square_yposition 
             orange_block.x_cord = orange_block.rect.x
             orange_block.y_cord = orange_block.rect.y
-            self.straight_tetrimnio.add(orange_block)
+            self.straight_tetrimino.append(orange_block)
     
     def movement(self):
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_time >= self.settings.cool_down:
-            self.last_time = current_time
-            if self.settings.right_movement:
-                collision = pygame.sprite.groupcollide(self.straight_tetrimnio,self.grey_right_blocks,False,False,)
-                if not collision:         
-                    for block in self.straight_tetrimnio:
+        last_index = self.straight_tetrimino[-1]
+        first_index = self.straight_tetrimino[0]
+        if self.settings.right_movement:
+            if not self.second_position:
+                if last_index.rect.x <= self.settings.left_block_coord - last_index.rect.width * 3:
+                    for block in self.straight_tetrimino:
+                        block.x_cord += self.settings.tetrimino_speed
+                        block.rect.x = block.x_cord
+            else:
+                for block in self.straight_tetrimino:
+                    if block.rect.x <= self.settings.left_block_coord - last_index.rect.width *3:
                         block.x_cord += self.settings.tetrimino_speed
                         block.rect.x = block.x_cord
 
-            if self.settings.left_movement:
-                collision = pygame.sprite.groupcollide(self.straight_tetrimnio,self.grey_left_blocks,False,False)
-                if not collision:
-                    for block in self.straight_tetrimnio:
+        if self.settings.left_movement:
+            if not self.second_position:
+                if first_index.rect.x >= self.settings.right_block_coord:
+                    for block in self.straight_tetrimino:
+                        block.x_cord += - self.settings.tetrimino_speed
+                        block.rect.x = block.x_cord
+            else:
+                for block in self.straight_tetrimino:
+                    if block.rect.x >= self.settings.right_block_coord:
                         block.x_cord += -self.settings.tetrimino_speed
                         block.rect.x = block.x_cord
-            
-            if self.settings.up_movement:
-                collision = pygame.sprite.groupcollide(self.straight_tetrimnio,self.grey_up_blocks,False,False)
-                if not collision:
-                    for block in self.straight_tetrimnio:
-                        block.y_cord += -self.settings.tetrimino_speed
-                        block.rect.y = block.y_cord
 
-            if self.settings.down_movement:
-                collision = pygame.sprite.groupcollide(self.straight_tetrimnio,self.grey_down_blocks,False,False)
-                if not collision:
-                    for block in self.straight_tetrimnio:
-                        block.y_cord += self.settings.tetrimino_speed
-                        block.rect.y = block.y_cord
+        if self.settings.down_movement:
+            if first_index.rect.y <= self.settings.square_bottom_yposition:
+                for block in self.straight_tetrimino:
+                    block.y_cord += self.settings.tetrimino_speed
+                    block.rect.y = block.y_cord
+                
+
+        if self.settings.up_movement:
+            counter = 1
+            if not self.second_position:
+                self.second_position = True
+                starting_yposition = self.straight_tetrimino[1].rect.y
+                starting_xposition = self.straight_tetrimino[0].rect.x
+                for block in self.straight_tetrimino:
+                        block.rect.y = starting_yposition + (block.rect.width * counter)
+                        block.rect.x = starting_xposition
+                        counter += 1
+            else:
+                self.second_position = False
+                starting_yposition = self.straight_tetrimino[-1].rect.y
+                strating_xposition = self.straight_tetrimino[0].rect.x 
+                for block in self.straight_tetrimino:
+                    block.rect.y = starting_yposition
+                    block.rect.x = strating_xposition + (block.rect.width * counter)
+            self.settings.up_movement = False
+
         
-
-
-    def draw_tetrimino(self):
-        self.straight_tetrimnio.update()
-        self.straight_tetrimnio.draw(self.screen)
+        
+    def blit_tetrimino(self):
+        for block in self.straight_tetrimino:
+            self.screen.blit(block.image, block.rect)

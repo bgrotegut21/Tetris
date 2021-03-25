@@ -10,8 +10,11 @@ class Settings:
         self.square_ycord = (self.square_yamount//2) -10
         print(self.square_ycord)
         self.square_yposition = self.screen_rect.topleft[0] + (self.square_ycord * sqaure_size)
+        self.square_bottom_yposition = self.screen_rect.bottomleft[1] - (18 * sqaure_size)
         self.right_position = self.square_xamount//2
         self.screen_block_face = self.right_position - 5
+        self.right_block_coord = self.screen_rect.topleft[0] + (self.screen_block_face * sqaure_size)
+        self.left_block_coord = self.screen_rect.topright[0] - (self.screen_block_face * sqaure_size)
         self.tetrimino_speed = 20
         self.down_movement = False
         self.right_movement = False
