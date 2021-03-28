@@ -153,6 +153,7 @@ class Main:
         for board in self.board:
             board.display_board()
         
+        
     def update_game(self):
         self.screen.fill((33,33,33)) 
 

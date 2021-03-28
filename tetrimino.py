@@ -24,64 +24,78 @@ class S_Tetrimnio:
         for num in range(4):
             orange_block = GreyBlock(self,"images/redsquare.bmp")
             center_position = self.settings.screen_block_face + 2
-            starting_position = self.screen_rect.topleft[0] + (center_position * orange_block.rect.width) 
+            starting_position = self.screen_rect.topleft[0] +  (center_position * orange_block.rect.width) 
             orange_block.rect.x = starting_position + (num * orange_block.rect.width)
             orange_block.rect.y = self.settings.square_yposition 
             orange_block.x_cord = orange_block.rect.x
             orange_block.y_cord = orange_block.rect.y
             self.straight_tetrimino.append(orange_block)
     
+    def check_rotation(self):
+        center_position = self.settings.screen_block_face +4
+        rotate_position = self.screen_rect.topright[0] - (center_position * 20)
+        if self.second_position:
+
+            for block in self.straight_tetrimino:
+                if block.rect.x > rotate_position:
+                    self.settings.can_rotate = False
+                else:
+                    self.settings.can_rotate = True
+            print(f"Can Rotate - {self.settings.can_rotate} ")
+    
     def movement(self):
+        self.check_rotation()
         last_index = self.straight_tetrimino[-1]
         first_index = self.straight_tetrimino[0]
         if self.settings.right_movement:
             if not self.second_position:
                 if last_index.rect.x <= self.settings.left_block_coord - last_index.rect.width * 3:
                     for block in self.straight_tetrimino:
-                        block.x_cord += self.settings.tetrimino_speed
-                        block.rect.x = block.x_cord
+                        block.rect.x += self.settings.tetrimino_speed   
             else:
                 for block in self.straight_tetrimino:
                     if block.rect.x <= self.settings.left_block_coord - last_index.rect.width *3:
-                        block.x_cord += self.settings.tetrimino_speed
-                        block.rect.x = block.x_cord
+                        block.rect.x += self.settings.tetrimino_speed
 
         if self.settings.left_movement:
             if not self.second_position:
                 if first_index.rect.x >= self.settings.right_block_coord:
                     for block in self.straight_tetrimino:
-                        block.x_cord += - self.settings.tetrimino_speed
-                        block.rect.x = block.x_cord
+                        block.rect.x += -self.settings.tetrimino_speed
             else:
                 for block in self.straight_tetrimino:
                     if block.rect.x >= self.settings.right_block_coord:
-                        block.x_cord += -self.settings.tetrimino_speed
-                        block.rect.x = block.x_cord
+                        block.rect.x += -self.settings.tetrimino_speed
 
         if self.settings.down_movement:
-            if first_index.rect.y <= self.settings.square_bottom_yposition:
+            if not self.second_position:
+                if first_index.rect.y <= self.settings.square_bottom_yposition:
+                    for block in self.straight_tetrimino:
+                        block.rect.y += self.settings.tetrimino_speed 
+            else:
                 for block in self.straight_tetrimino:
-                    block.y_cord += self.settings.tetrimino_speed
-                    block.rect.y = block.y_cord
-                
+                    if last_index.rect.y <= self.settings.square_bottom_yposition:
+                        for block in self.straight_tetrimino:
+                            block.rect.y += self.settings.tetrimino_speed                
 
         if self.settings.up_movement:
-            counter = 1
+            counter = 0
             if not self.second_position:
                 self.second_position = True
-                starting_yposition = self.straight_tetrimino[1].rect.y
+                starting_yposition = self.straight_tetrimino[0].rect.y
                 starting_xposition = self.straight_tetrimino[0].rect.x
                 for block in self.straight_tetrimino:
                         block.rect.y = starting_yposition + (block.rect.width * counter)
                         block.rect.x = starting_xposition
                         counter += 1
-            else:
+            elif self.settings.can_rotate:
                 self.second_position = False
                 starting_yposition = self.straight_tetrimino[-1].rect.y
-                strating_xposition = self.straight_tetrimino[0].rect.x 
+                starting_xposition = self.straight_tetrimino[1].rect.x 
                 for block in self.straight_tetrimino:
                     block.rect.y = starting_yposition
-                    block.rect.x = strating_xposition + (block.rect.width * counter)
+                    block.rect.x = starting_xposition + (block.rect.width * counter)
+                    counter += 1
             self.settings.up_movement = False
 
         
