@@ -138,15 +138,6 @@ class S_Tetrimnio:
             self.down_movement()
         self.up_rotation()
 
-
-
-
-
-
-
-
-        
-        
     def blit_tetrimino(self):
         for block in self.straight_tetrimino:
             self.screen.blit(block.image, block.rect)
