@@ -21,4 +21,4 @@ class Settings:
         self.left_movement = False
         self.up_movement = False
 
-        self.cool_down = 300
+        self.cool_down = 50

@@ -21,6 +21,10 @@ class S_Tetrimnio:
         self.can_collide = False
         self.can_rotate = True
         self.can_move = True
+        self.add_tetrimnio()
+        self.last_index = self.straight_tetrimino[-1]
+        self.first_index = self.straight_tetrimino[0]
+        self.last_time = pygame.time.get_ticks()
 
 
     def add_tetrimnio(self):
@@ -36,14 +40,14 @@ class S_Tetrimnio:
     
     def check_rotation(self):
         right_position = self.settings.screen_block_face + 4
-        left_position = self.settings.screen_block_face + 1
+        left_position = self.settings.screen_block_face 
         right_rotation = self.screen_rect.topright[0] - (right_position * 20)
-        left_rotation = self.screen_rect.topleft[0] - (left_position * 20)
+        left_rotation = self.screen_rect.topleft[0] + (left_position * 20)
         
         for block in self.straight_tetrimino:
             if block.rect.x > right_rotation:
                 self.can_rotate = False
-            elif block.rect.x > left_rotation:
+            elif block.rect.x < left_rotation:
                 self.can_rotate = False
             else:
                 self.can_rotate = True
@@ -55,48 +59,48 @@ class S_Tetrimnio:
     def _move_left_blocks(self):
         for block in self.straight_tetrimino:
             block.rect.x += -self.settings.tetrimino_speed
-    
-    def movement(self):
-        self.check_rotation()
-        last_index = self.straight_tetrimino[-1]
-        first_index = self.straight_tetrimino[0]
+
+    def right_movement(self):
         if self.settings.right_movement:
             if not self.second_position:
                 if not self.can_collide:
-                    if last_index.rect.x <= self.settings.left_block_coord - last_index.rect.width * 3:
+                    if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 3:
                         self._move_right_blocks()
                 else:
-                    if last_index.rect.x <= self.settings.left_block_coord - last_index.rect.width * 6:
+                    if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 6:
                         self._move_right_blocks()
             else:
                 for block in self.straight_tetrimino:
-                    if block.rect.x <= self.settings.left_block_coord - last_index.rect.width *3:
+                    if block.rect.x <= self.settings.left_block_coord - self.last_index.rect.width *3:
                         block.rect.x += self.settings.tetrimino_speed
 
+    def left_movement(self):
         if self.settings.left_movement:
-            if not self.can_collide:
-                if not self.second_position:
-                    if first_index.rect.x >= self.settings.right_block_coord:
+            if not self.second_position:
+                if not self.can_collide:
+                    if self.first_index.rect.x >= self.settings.right_block_coord:
                         self._move_left_blocks()
                 else:
-                    if first_index.rect.x >= self.settings.right_block_coord * 20:
+                    if self.first_index.rect.x >= self.settings.right_block_coord + 20:
                         self._move_left_blocks()
             else:
                 for block in self.straight_tetrimino:
                     if block.rect.x >= self.settings.right_block_coord:
                         block.rect.x += -self.settings.tetrimino_speed
-
+    
+    def down_movement(self):
         if self.settings.down_movement:
             if not self.second_position:
-                if first_index.rect.y <= self.settings.square_bottom_yposition:
+                if self.first_index.rect.y <= self.settings.square_bottom_yposition:
                     for block in self.straight_tetrimino:
                         block.rect.y += self.settings.tetrimino_speed 
             else:
                 for block in self.straight_tetrimino:
-                    if last_index.rect.y <= self.settings.square_bottom_yposition:
+                    if self.last_index.rect.y <= self.settings.square_bottom_yposition:
                         for block in self.straight_tetrimino:
-                            block.rect.y += self.settings.tetrimino_speed                
+                            block.rect.y += self.settings.tetrimino_speed    
 
+    def up_rotation(self):
         if self.settings.up_movement:
             counter = 0
             if not self.second_position:
@@ -120,6 +124,26 @@ class S_Tetrimnio:
                 self.can_collide = True
 
             self.settings.up_movement = False
+
+
+    def movement(self):
+        current_time = pygame.time.get_ticks()
+        self.check_rotation()
+        print(f"last time - {self.last_time}")
+        print(f"Current time - {current_time}")
+        if current_time - self.last_time  >= self.settings.cool_down:
+            self.last_time = current_time
+            self.right_movement()
+            self.left_movement()
+            self.down_movement()
+        self.up_rotation()
+
+
+
+
+
+
+
 
         
         

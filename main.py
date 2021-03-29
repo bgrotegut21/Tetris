@@ -21,7 +21,6 @@ class Main:
         self.settings = Settings(self)
         self._create_greyblocks()
         self.s_tetrimnio = S_Tetrimnio(self)
-        self.s_tetrimnio.add_tetrimnio()
         self.backgroundcolor = self.settings.backgroundcolor
         
         self.current_tetrimino = []
@@ -40,6 +39,7 @@ class Main:
             print("key pressed")
             self.settings.right_movement = True
         if event == pygame.K_LEFT:
+            print("left key pressed")
             self.settings.left_movement = True
         if event == pygame.K_DOWN:
             self.settings.down_movement = True
