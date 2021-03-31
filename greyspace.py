@@ -10,4 +10,4 @@ class GreyBlock(Sprite):
         self.rect = self.image.get_rect()
         self.x_cord = self.rect.x
         self.y_cord  = self.rect.y
-        
+        self.show_block = True

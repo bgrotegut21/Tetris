@@ -20,5 +20,6 @@ class Settings:
         self.right_movement = False
         self.left_movement = False
         self.up_movement = False
+        self.stop_moving_tetrimino = False
 
         self.cool_down = 50

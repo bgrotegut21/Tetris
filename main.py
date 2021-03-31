@@ -5,6 +5,7 @@ from settings import Settings
 from greyspace import GreyBlock   
 from  board import Board
 from tetrimino import S_Tetrimnio
+from scanner import Scanner
 
 
 class Main:
@@ -21,6 +22,7 @@ class Main:
         self.settings = Settings(self)
         self._create_greyblocks()
         self.s_tetrimnio = S_Tetrimnio(self)
+        self.scanner = Scanner(self)
         self.backgroundcolor = self.settings.backgroundcolor
         
         self.current_tetrimino = []
@@ -152,8 +154,28 @@ class Main:
     def draw_board(self):
         for board in self.board:
             board.display_board()
-        
-        
+    
+    def tetrimino_collision(self):
+        for block in self.s_tetrimnio.tetrimino:
+            
+            if block.rect.y >= self.settings.square_bottom_yposition + 20:
+                self.settings.stop_moving_tetrimino = True
+                self.scanner_collision()
+                break
+
+
+    def scanner_collision(self):
+        if self.settings.stop_moving_tetrimino:
+            for scanner_block in self.scanner.scanner_blocks:
+                for blocks in self.s_tetrimnio.tetrimino:
+                    if blocks.rect ==  scanner_block.rect:
+                        self.scanner.scanner_blocks.append(blocks)
+    
+    def delete_tetrimino(self):
+        for block in self.s_tetrimnio.tetrimino[:]:
+            self.s_tetrimnio.tetrimino
+
+
     def update_game(self):
         self.screen.fill((33,33,33)) 
 
@@ -162,7 +184,10 @@ class Main:
         self.grey_up_blocks.draw(self.screen)
         self.grey_down_blocks.draw(self.screen)
         self.draw_board()
+        self.tetrimino_collision()
         self.s_tetrimnio.movement()
+        self.scanner.draw_scanner()
+        self.tetrimino_collision()
         self.s_tetrimnio.blit_tetrimino()
         pygame.display.flip()
 
