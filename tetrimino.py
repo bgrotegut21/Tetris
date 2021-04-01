@@ -131,8 +131,6 @@ class S_Tetrimnio:
         if not self.settings.stop_moving_tetrimino:
             current_time = pygame.time.get_ticks()
             self.check_rotation()
-            print(f"last time - {self.last_time}")
-            print(f"Current time - {current_time}")
             if current_time - self.last_time  >= self.settings.cool_down:
                 self.last_time = current_time
                 self.right_movement()

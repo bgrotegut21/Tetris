@@ -6,19 +6,19 @@ class Scanner:
         self.screen = game.screen
         self.screen_rect = self.screen.get_rect()
         self.settings = game.settings
-        self.scanner_blocks = []
+        self.scanner_blocks = pygame.sprite.Group()
         self.make_scanner_row()
         
 
     def make_scanner_row(self):
-        block = GreyBlock(self,"images/purplesquare.bmp")
+        blocks = GreyBlock(self,"images/purplesquare.bmp")
         x_position = self.settings.right_block_coord - 20
         y_position = self.settings.square_bottom_yposition + 20
         for number in range(10):
             block = GreyBlock(self,"images/purplesquare.bmp")
             block.rect.x = x_position + (number * 20)
             block.rect.y = y_position
-            self.scanner_blocks.append(block)
+            self.scanner_blocks.add(block)
 
     def draw_scanner(self):
         for block in self.scanner_blocks:

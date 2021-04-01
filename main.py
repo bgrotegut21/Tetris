@@ -1,6 +1,7 @@
 
 import pygame
 import sys
+import time
 from settings import Settings
 from greyspace import GreyBlock   
 from  board import Board
@@ -157,23 +158,36 @@ class Main:
     
     def tetrimino_collision(self):
         for block in self.s_tetrimnio.tetrimino:
-            
-            if block.rect.y >= self.settings.square_bottom_yposition + 20:
+            if block.rect.y >= self.settings.square_bottom_yposition + 40:
                 self.settings.stop_moving_tetrimino = True
                 self.scanner_collision()
                 break
 
 
     def scanner_collision(self):
+        print("scanner")
         if self.settings.stop_moving_tetrimino:
             for scanner_block in self.scanner.scanner_blocks:
-                for blocks in self.s_tetrimnio.tetrimino:
-                    if blocks.rect ==  scanner_block.rect:
-                        self.scanner.scanner_blocks.append(blocks)
-    
-    def delete_tetrimino(self):
-        for block in self.s_tetrimnio.tetrimino[:]:
-            self.s_tetrimnio.tetrimino
+                for s_block in self.s_tetrimnio.tetrimino:
+                    print(f"s_block rect - {s_block.rect} \n") 
+                    print(f"scanner block rect - {scanner_block.rect} \n")
+                    if scanner_block.rect == s_block.rect:
+                        print("testing")
+                        self.spawn_new_tetrimino()
+
+    def spawn_new_tetrimino(self):
+        counter = 0
+        for block in self.s_tetrimnio.tetrimino:
+            center_position = self.settings.screen_block_face + 2
+            statring_position = self.screen_rect.topleft[0] + (center_position * 20)
+            block.rect.x = statring_position + (counter * 20)
+            block.rect.y = self.settings.square_yposition
+            counter += 1
+        self.settings.stop_moving_tetrimino = False
+        self.s_tetrimnio.can_collide = False
+        self.s_tetrimnio.second_position = False
+        pygame.time.wait(100)
+
 
 
     def update_game(self):

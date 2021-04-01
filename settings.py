@@ -22,4 +22,4 @@ class Settings:
         self.up_movement = False
         self.stop_moving_tetrimino = False
 
-        self.cool_down = 50
+        self.cool_down = 100
