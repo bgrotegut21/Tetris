@@ -25,6 +25,7 @@ class Main:
         self.s_tetrimnio = S_Tetrimnio(self)
         self.scanner = Scanner(self)
         self.backgroundcolor = self.settings.backgroundcolor
+        self.last_time = pygame.time.get_ticks()
         
         self.current_tetrimino = []
 
@@ -158,24 +159,33 @@ class Main:
     
     def tetrimino_collision(self):
         for block in self.s_tetrimnio.tetrimino:
-            if block.rect.y >= self.settings.square_bottom_yposition + 40:
+            if block.rect.y >= self.settings.square_bottom_yposition+20:
                 self.settings.stop_moving_tetrimino = True
-                self.scanner_collision()
+                for new_block in self.s_tetrimnio.tetrimino:
+                    self.scanner_collision(new_block.rect,new_block.image)
                 break
 
 
-    def scanner_collision(self):
-        print("scanner")
-        if self.settings.stop_moving_tetrimino:
-            for scanner_block in self.scanner.scanner_blocks:
-                for s_block in self.s_tetrimnio.tetrimino:
-                    print(f"s_block rect - {s_block.rect} \n") 
-                    print(f"scanner block rect - {scanner_block.rect} \n")
-                    if scanner_block.rect == s_block.rect:
-                        print("testing")
-                        self.spawn_new_tetrimino()
+    def scanner_collision(self,block_rect, block_image):
+        for s_block in self.scanner.scanner_blocks:
+            if s_block.rect == block_rect and s_block.can_flip:
+                block = GreyBlock(self)
+                block.image = block_image
+                block.rect = s_block.rect
+                block.can_flip = False
+                s_block.can_flip = False
+                self.scanner.scanner_blocks.add(block)
+                print(f"Len of scanner blocks {len(self.scanner.scanner_blocks)}")
+        self.settings.spawn_tetrimino = True
+
+    def check_spawn_tetrimino(self):
+        if self.settings.spawn_tetrimino:
+            self.spawn_new_tetrimino()
+            self.settings.spawn_tetrimino = False
+                 
 
     def spawn_new_tetrimino(self):
+        current_time = pygame.time.get_ticks()
         counter = 0
         for block in self.s_tetrimnio.tetrimino:
             center_position = self.settings.screen_block_face + 2
@@ -186,7 +196,6 @@ class Main:
         self.settings.stop_moving_tetrimino = False
         self.s_tetrimnio.can_collide = False
         self.s_tetrimnio.second_position = False
-        pygame.time.wait(100)
 
 
 
@@ -203,6 +212,7 @@ class Main:
         self.scanner.draw_scanner()
         self.tetrimino_collision()
         self.s_tetrimnio.blit_tetrimino()
+        self.check_spawn_tetrimino()
         pygame.display.flip()
 
     

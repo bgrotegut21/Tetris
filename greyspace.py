@@ -11,3 +11,5 @@ class GreyBlock(Sprite):
         self.x_cord = self.rect.x
         self.y_cord  = self.rect.y
         self.show_block = True
+        self.can_collide_block = False
+        self.can_flip = True

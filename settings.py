@@ -21,5 +21,6 @@ class Settings:
         self.left_movement = False
         self.up_movement = False
         self.stop_moving_tetrimino = False
-
+        self.spawn_tetrimino = False
         self.cool_down = 100
+        self.tetro_cool_down = 300
