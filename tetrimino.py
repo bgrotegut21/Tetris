@@ -59,6 +59,10 @@ class S_Tetrimnio:
     def _move_left_blocks(self):
         for block in self.tetrimino:
             block.rect.x += -self.settings.tetrimino_speed
+    
+    def _move_down_blocks(self):
+        for block in self.tetrimino:
+            block.rect.y += self.settings.tetrimino_speed
 
     def right_movement(self):
         if self.settings.right_movement:
@@ -92,13 +96,14 @@ class S_Tetrimnio:
         if self.settings.down_movement:
             if not self.second_position:
                 if self.first_index.rect.y <= self.settings.square_bottom_yposition:
-                    for block in self.tetrimino:
-                        block.rect.y += self.settings.tetrimino_speed 
+                    self._move_down_blocks()
             else:
                 for block in self.tetrimino:
                     if self.last_index.rect.y <= self.settings.square_bottom_yposition:
                         for block in self.tetrimino:
                             block.rect.y += self.settings.tetrimino_speed    
+
+
 
     def up_rotation(self):
         if self.settings.up_movement:
@@ -137,6 +142,14 @@ class S_Tetrimnio:
                 self.left_movement()
                 self.down_movement()
             self.up_rotation()
+
+    def auto_movement(self):
+        if not self.settings.stop_moving_tetrimino:
+            current_time = pygame.time.get_ticks()
+            self.check_rotation()
+            if current_time - self.last_time >= self.settings.cool_down:
+                self._move_down_blocks()
+
 
     def blit_tetrimino(self):
         for block in self.tetrimino:

@@ -213,6 +213,7 @@ class Main:
         self.tetrimino_collision()
         self.s_tetrimnio.blit_tetrimino()
         self.check_spawn_tetrimino()
+        self.s_tetrimnio.auto_movement()
         pygame.display.flip()
 
     
