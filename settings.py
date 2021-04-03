@@ -23,4 +23,5 @@ class Settings:
         self.stop_moving_tetrimino = False
         self.spawn_tetrimino = False
         self.cool_down = 100
-        self.tetro_cool_down = 300
+        self.tetro_cool_down = 600
+        self.empty_time = 100

@@ -25,6 +25,8 @@ class S_Tetrimnio:
         self.last_index = self.tetrimino[-1]
         self.first_index = self.tetrimino[0]
         self.last_time = pygame.time.get_ticks()
+        self.tetro_time = pygame.time.get_ticks()
+
 
 
     def add_tetrimnio(self):
@@ -85,7 +87,7 @@ class S_Tetrimnio:
                     if self.first_index.rect.x >= self.settings.right_block_coord:
                         self._move_left_blocks()
                 else:
-                    if self.first_index.rect.x >= self.settings.right_block_coord + 20:
+                    if self.first_index.rect.x >= self.settings.right_block_coord - 20:
                         self._move_left_blocks()
             else:
                 for block in self.tetrimino:
@@ -95,13 +97,12 @@ class S_Tetrimnio:
     def down_movement(self):
         if self.settings.down_movement:
             if not self.second_position:
-                if self.first_index.rect.y <= self.settings.square_bottom_yposition:
+                if self.first_index.rect.y <= self.settings.square_bottom_yposition + 20:
                     self._move_down_blocks()
             else:
                 for block in self.tetrimino:
-                    if self.last_index.rect.y <= self.settings.square_bottom_yposition:
-                        for block in self.tetrimino:
-                            block.rect.y += self.settings.tetrimino_speed    
+                    if block.rect.x >= self.settings.square_bottom_yposition + 20:
+                        block.rect.y += self.settings.tetrimino_speed    
 
 
 
@@ -146,9 +147,10 @@ class S_Tetrimnio:
     def auto_movement(self):
         if not self.settings.stop_moving_tetrimino:
             current_time = pygame.time.get_ticks()
-            self.check_rotation()
-            if current_time - self.last_time >= self.settings.cool_down:
-                self._move_down_blocks()
+            if current_time - self.tetro_time >= self.settings.tetro_cool_down:
+                self.tetro_time = current_time
+                for block in self.tetrimino:
+                    block.rect.y += self.settings.tetrimino_speed
 
 
     def blit_tetrimino(self):
