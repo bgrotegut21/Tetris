@@ -35,7 +35,7 @@ class S_Tetrimnio:
             center_position = self.settings.screen_block_face + 2
             starting_position = self.screen_rect.topleft[0] +  (center_position * orange_block.rect.width) 
             orange_block.rect.x = starting_position + (num * orange_block.rect.width)
-            orange_block.rect.y = self.settings.square_yposition 
+            orange_block.rect.y = self.settings.square_yposition - (4 * 20)
             orange_block.x_cord = orange_block.rect.x
             orange_block.y_cord = orange_block.rect.y
             self.tetrimino.append(orange_block)
@@ -87,7 +87,7 @@ class S_Tetrimnio:
                     if self.first_index.rect.x >= self.settings.right_block_coord:
                         self._move_left_blocks()
                 else:
-                    if self.first_index.rect.x >= self.settings.right_block_coord - 20:
+                    if self.first_index.rect.x >= self.settings.right_block_coord + 20:
                         self._move_left_blocks()
             else:
                 for block in self.tetrimino:

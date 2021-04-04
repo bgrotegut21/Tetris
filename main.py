@@ -13,7 +13,7 @@ class Main:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Tetris")
-        self.screen = pygame.display.set_mode((1920,1080))
+        self.screen = pygame.display.set_mode((1920, 900))
         self.screen_rect = self.screen.get_rect()
         self.grey_right_blocks = pygame.sprite.Group()
         self.grey_left_blocks = pygame.sprite.Group()
@@ -79,7 +79,7 @@ class Main:
         self._create_right_blocks(screen_right_width,screen_blockheight_space)
 
         self._create_top_blocks(10,screen_fill_bottom_cubes)
-        self._create_bottom_blocks(10,screen_fill_bottom_cubes)
+        self._create_bottom_blocks(10,screen_fill_bottom_cubes + 8) # +8 when working on 15 inch black hp laptop
         self._create_board(6,4)
     
     def _create_top_blocks(self,block_width, block_height):
@@ -171,6 +171,8 @@ class Main:
                     if scanner_block.can_collide_block:
                         if s_block.rect.y == scanner_block.rect.y - 20 and s_block.rect.x == scanner_block.rect.x:
                             self.settings.stop_moving_tetrimino = True
+                            for new_block in self.s_tetrimnio.tetrimino:
+                                self.scanner_collision(new_block.rect, new_block.image)
 
     def scanner_collision(self,block_rect, block_image):
         for position in self.scanner.scanner_blocks:
@@ -178,7 +180,8 @@ class Main:
                 if s_block.rect == block_rect and s_block.can_flip:
                     block = GreyBlock(self)
                     block.image = block_image
-                    block.rect = s_block.rect
+                    block.rect.x = s_block.rect.x
+                    block.rect.y = s_block.rect.y
                     block.can_flip = False
                     s_block.can_flip = False
                     s_block.can_collide_block = True
@@ -206,9 +209,9 @@ class Main:
         counter = 0
         for block in self.s_tetrimnio.tetrimino:
             center_position = self.settings.screen_block_face + 2
-            statring_position = self.screen_rect.topleft[0] + (center_position * 20)
+            statring_position = self.screen_rect.topleft[0] + (center_position * 20) 
             block.rect.x = statring_position + (counter * 20)
-            block.rect.y = self.settings.square_yposition
+            block.rect.y = self.settings.square_yposition - (4 * 20)
             counter += 1
         self.settings.stop_moving_tetrimino = False
         self.s_tetrimnio.can_collide = False
