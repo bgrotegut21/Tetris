@@ -13,7 +13,7 @@ class Main:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Tetris")
-        self.screen = pygame.display.set_mode((1920, 900))
+        self.screen = pygame.display.set_mode((1920, 1080))
         self.screen_rect = self.screen.get_rect()
         self.grey_right_blocks = pygame.sprite.Group()
         self.grey_left_blocks = pygame.sprite.Group()
@@ -40,10 +40,8 @@ class Main:
         if event == pygame.K_q:
             sys.exit()
         if event == pygame.K_RIGHT:
-            print("key pressed")
             self.settings.right_movement = True
         if event == pygame.K_LEFT:
-            print("left key pressed")
             self.settings.left_movement = True
         if event == pygame.K_DOWN:
             self.settings.down_movement = True
@@ -79,7 +77,7 @@ class Main:
         self._create_right_blocks(screen_right_width,screen_blockheight_space)
 
         self._create_top_blocks(10,screen_fill_bottom_cubes)
-        self._create_bottom_blocks(10,screen_fill_bottom_cubes + 8) # +8 when working on 15 inch black hp laptop
+        self._create_bottom_blocks(10,screen_fill_bottom_cubes) # +8 when working on 15 inch black hp laptop
         self._create_board(6,4)
     
     def _create_top_blocks(self,block_width, block_height):
@@ -113,6 +111,7 @@ class Main:
 
 
                 self.grey_down_blocks.add(square)
+    
         
         
     def _create_right_blocks(self,block_width, block_height):
@@ -153,6 +152,8 @@ class Main:
                 board.rect.y = board_starting_yposition + (height_number * board.rect.height)
                 self.board.add(board)
     
+    
+    
     def draw_board(self):
         for board in self.board:
             board.display_board()
@@ -164,16 +165,19 @@ class Main:
                 for new_block in self.s_tetrimnio.tetrimino:
                     self.scanner_collision(new_block.rect,new_block.image)
                 break
+    
+
+    
     def block_collision(self):
-        for s_block in self.s_tetrimnio.tetrimino:
+        for block in self.s_tetrimnio.tetrimino:
             for position in self.scanner.scanner_blocks:
-                for scanner_block in self.scanner.scanner_blocks[position]:
-                    if scanner_block.can_collide_block:
-                        if s_block.rect.y == scanner_block.rect.y - 20 and s_block.rect.x == scanner_block.rect.x:
-                            self.settings.stop_moving_tetrimino = True
+                for scanner_blocks in self.scanner.scanner_blocks[position]:
+                    if scanner_blocks.can_collide_block:
+                        if block.rect.y == scanner_blocks.rect.y - 20 and block.rect.x == scanner_blocks.rect.x:
                             for new_block in self.s_tetrimnio.tetrimino:
                                 self.scanner_collision(new_block.rect, new_block.image)
-
+                            break
+                    
     def scanner_collision(self,block_rect, block_image):
         for position in self.scanner.scanner_blocks:
             for s_block in self.scanner.scanner_blocks[position]:
@@ -187,7 +191,6 @@ class Main:
                     s_block.can_collide_block = True
                     self.scanner.scanner_blocks[position].add(block)
 
-        print(f"Len of scanner blocks {len(self.scanner.scanner_blocks)}")
         self.settings.spawn_tetrimino = True
 
     def check_spawn_tetrimino(self):
@@ -211,7 +214,7 @@ class Main:
             center_position = self.settings.screen_block_face + 2
             statring_position = self.screen_rect.topleft[0] + (center_position * 20) 
             block.rect.x = statring_position + (counter * 20)
-            block.rect.y = self.settings.square_yposition - (4 * 20)
+            block.rect.y = self.settings.square_yposition 
             counter += 1
         self.settings.stop_moving_tetrimino = False
         self.s_tetrimnio.can_collide = False
@@ -236,6 +239,9 @@ class Main:
         self.s_tetrimnio.auto_movement()
         self.s_tetrimnio.blit_tetrimino()
         self.check_spawn_tetrimino()
+        self.s_tetrimnio.detect_collision()
+    
+        
 
         pygame.display.flip()
 

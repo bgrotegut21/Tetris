@@ -1,6 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
 from greyspace import GreyBlock
+from scanner import Scanner
 
 
 
@@ -26,7 +27,9 @@ class S_Tetrimnio:
         self.first_index = self.tetrimino[0]
         self.last_time = pygame.time.get_ticks()
         self.tetro_time = pygame.time.get_ticks()
-
+        self.scanner = Scanner(self)
+        self.can_move_right = True
+        self.right_collision = True
 
 
     def add_tetrimnio(self):
@@ -35,7 +38,7 @@ class S_Tetrimnio:
             center_position = self.settings.screen_block_face + 2
             starting_position = self.screen_rect.topleft[0] +  (center_position * orange_block.rect.width) 
             orange_block.rect.x = starting_position + (num * orange_block.rect.width)
-            orange_block.rect.y = self.settings.square_yposition - (4 * 20)
+            orange_block.rect.y = self.settings.square_yposition 
             orange_block.x_cord = orange_block.rect.x
             orange_block.y_cord = orange_block.rect.y
             self.tetrimino.append(orange_block)
@@ -66,11 +69,18 @@ class S_Tetrimnio:
         for block in self.tetrimino:
             block.rect.y += self.settings.tetrimino_speed
 
+    def detect_collision(self):
+        for position in self.scanner.scanner_blocks:
+            for block in self.scanner.scanner_blocks[position]:
+                print(f"Blocks - {self.scanner.scanner_blocks}")
+                if block.can_collide_block:
+                    print("it can collide")
+
     def right_movement(self):
         if self.settings.right_movement:
             if not self.second_position:
                 if not self.can_collide:
-                    if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 3:
+                    if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 3 and self.right_collision:
                         self._move_right_blocks()
                 else:
                     if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 6:
@@ -111,7 +121,6 @@ class S_Tetrimnio:
             counter = 0
             if not self.second_position:
                 self.second_position = True
-                print(f"Len of tetrimino - {self.tetrimino}")
                 starting_yposition = self.tetrimino[0].rect.y
                 starting_xposition = self.tetrimino[0].rect.x
                 for block in self.tetrimino:
