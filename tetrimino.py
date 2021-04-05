@@ -73,10 +73,7 @@ class S_Tetrimnio:
         for position in self.scanner.scanner_blocks:
             for block in self.scanner.scanner_blocks[position]:
                 if block.can_collide_block:
-                    if self.last_index.rect.x <= block.rect.x - 80:
-                        self.right_collision = True
-                    if self.last_index.rect.x >= block.rect.x - 80:
-                        self.right_collision = False
+                    if self.last_index <= block.rect.x 
 
     def right_movement(self):
         if self.settings.right_movement:
