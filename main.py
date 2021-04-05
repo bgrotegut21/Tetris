@@ -22,8 +22,8 @@ class Main:
         self.board = pygame.sprite.Group()
         self.settings = Settings(self)
         self._create_greyblocks()
-        self.s_tetrimnio = S_Tetrimnio(self)
         self.scanner = Scanner(self)
+        self.s_tetrimnio = S_Tetrimnio(self)
         self.backgroundcolor = self.settings.backgroundcolor
         self.last_time = pygame.time.get_ticks()
         
@@ -190,6 +190,7 @@ class Main:
                     s_block.can_flip = False
                     s_block.can_collide_block = True
                     self.scanner.scanner_blocks[position].add(block)
+                    print(self.scanner.scanner_blocks)
 
         self.settings.spawn_tetrimino = True
 
@@ -236,10 +237,10 @@ class Main:
         self.tetrimino_collision()
         self.block_collision()
         self.check_scanner()
+        self.s_tetrimnio.detect_collision()
         self.s_tetrimnio.auto_movement()
         self.s_tetrimnio.blit_tetrimino()
         self.check_spawn_tetrimino()
-        self.s_tetrimnio.detect_collision()
     
         
 

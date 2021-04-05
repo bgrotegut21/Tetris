@@ -27,7 +27,7 @@ class S_Tetrimnio:
         self.first_index = self.tetrimino[0]
         self.last_time = pygame.time.get_ticks()
         self.tetro_time = pygame.time.get_ticks()
-        self.scanner = Scanner(self)
+        self.scanner = game.scanner
         self.can_move_right = True
         self.right_collision = True
 
@@ -72,9 +72,11 @@ class S_Tetrimnio:
     def detect_collision(self):
         for position in self.scanner.scanner_blocks:
             for block in self.scanner.scanner_blocks[position]:
-                print(f"Blocks - {self.scanner.scanner_blocks}")
                 if block.can_collide_block:
-                    print("it can collide")
+                    if self.last_index.rect.x <= block.rect.x - 80:
+                        self.right_collision = True
+                    if self.last_index.rect.x >= block.rect.x - 80:
+                        self.right_collision = False
 
     def right_movement(self):
         if self.settings.right_movement:
