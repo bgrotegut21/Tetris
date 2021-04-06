@@ -70,10 +70,24 @@ class S_Tetrimnio:
             block.rect.y += self.settings.tetrimino_speed
 
     def detect_collision(self):
+        self.can_collide_block()
+        for position in self.scanner.scanner_blocks:
+            for blocks in  self.scanner.scanner_blocks[position]:
+                if blocks.can_collide_block:
+                    
+                    collision = self.last_index.rect.colliderect((blocks.rect.width + 20, blocks.rect.height  +20, 0,0))
+                    if collision:
+                        print("COLLLISION")
+                        self.right_collision = False
+                    else:
+                        self.right_collision = True
+    def can_collide_block(self):
+        collisions = 0
         for position in self.scanner.scanner_blocks:
             for block in self.scanner.scanner_blocks[position]:
                 if block.can_collide_block:
-                    if self.last_index <= block.rect.x 
+                    print(f"collisions - {collisions}")
+                    collisions += 1
 
     def right_movement(self):
         if self.settings.right_movement:

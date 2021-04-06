@@ -173,7 +173,7 @@ class Main:
             for position in self.scanner.scanner_blocks:
                 for scanner_blocks in self.scanner.scanner_blocks[position]:
                     if scanner_blocks.can_collide_block:
-                        if block.rect.y == scanner_blocks.rect.y - 20 and block.rect.x == scanner_blocks.rect.x:
+                        if block.rect.y == scanner_blocks.rect.y - 20 and block.rect.x <= scanner_blocks.rect.x -20 and block.rect.x >= scanner_blocks.rect.x +20:
                             for new_block in self.s_tetrimnio.tetrimino:
                                 self.scanner_collision(new_block.rect, new_block.image)
                             break
