@@ -13,3 +13,4 @@ class GreyBlock(Sprite):
         self.show_block = True
         self.can_collide_block = False
         self.can_flip = True
+        self.position1 = 0

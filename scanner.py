@@ -14,7 +14,7 @@ class Scanner:
     def make_scanner_row(self):
         blocks = GreyBlock(self,"images/scanner.bmp")
         x_position = self.settings.right_block_coord - 20
-        y_position = self.settings.square_bottom_yposition + 20
+        y_position = self.settings.square_bottom_yposition - 20
 
         for number_y in range(21):
             self.scanner_blocks[number_y] = pygame.sprite.Group()
