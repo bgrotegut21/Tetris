@@ -45,4 +45,5 @@ class Scanner:
     def draw_scanner(self):
         for num in self.scanner_blocks:
             for block in self.scanner_blocks[num]:
-                self.screen.blit(block.image, block.rect)
+                if block.pseudo_rect == False:
+                    self.screen.blit(block.image, block.rect)

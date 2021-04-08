@@ -160,30 +160,19 @@ class S_Tetrimnio:
     def tetro_collision(self,blocks):
         if not self.second_position:
             if not self.can_collide:
-                if self.last_index.rect.y >= blocks.rect.y:
+                if self.last_index.rect.y >= blocks.rect.y -20:
                     self.block_position_collision()
-            else:
-                if self.last_index.rect.y >= blocks.rect.y:
-                    self.block_position_collision2()
 
-    
-    def block_position_collision2(self):
-        position = self.last_index.position1
-        for scanner_block in self.scanner.scanner_blocks[position]:
-            if scanner_block.can_collide_block:
-                if self.last_index.rect.x == scanner_block.rect.x:
-                    self.right_collision = False
 
 
     def block_position_collision(self):
         position = self.last_index.position1
         for scanner_block in self.scanner.scanner_blocks[position]:
-            if scanner_block.can_collide_block:
+            if scanner_block.pseudo_rect:
                 if self.last_index.rect.x == scanner_block.rect.x-20:
                     self.right_collision = False
-         
-    
-
+                else:
+                    self.right_collision = True
 
 
         
@@ -191,7 +180,7 @@ class S_Tetrimnio:
         if not self.second_position:
             for position in self.scanner.scanner_blocks:
                 for blocks in self.scanner.scanner_blocks[position]:
-                    if blocks.can_collide_block:
+                    if blocks.pseudo_rect:
                         self.tetro_collision(blocks)
 
 
