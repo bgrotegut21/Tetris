@@ -26,7 +26,7 @@ class Scanner:
     
     def make_one_row(self,position):
         x_position = self.settings.right_block_coord - 20
-        y_position = self.settings.square_bottom_yposition + 20
+        y_position = self.settings.square_bottom_yposition - 20
         for number in range(10):
             block = GreyBlock(self,"images/purplesquare.bmp")
             block.rect.x = x_position + (number * 20)

@@ -80,10 +80,16 @@ class S_Tetrimnio:
                     collisions += 1
                     
     def find_position(self):
+    
         for block in self.tetrimino:
-            y_position = self.settings.square_bottom_yposition - 20
-            block.position1 = block.rect.y
-        print(f"Position - {block.position1}")
+            for position in self.scanner.scanner_blocks:
+                for scanner_block in self.scanner.scanner_blocks[position]:
+                    collision = scanner_block.rect.colliderect(block.rect)
+                    if collision:   
+                        block.position1 = position
+                        self.can_move_right = True
+            print(f"Block position - {block.position1}")
+                    
 
     def right_movement(self):
         if self.settings.right_movement:
@@ -92,7 +98,7 @@ class S_Tetrimnio:
                     if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 3 and self.right_collision:
                         self._move_right_blocks()
                 else:
-                    if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 6:
+                    if self.last_index.rect.x <= self.settings.left_block_coord - self.last_index.rect.width * 6 and self.right_collision:
                         self._move_right_blocks()
             else:
                 for block in self.tetrimino:
@@ -107,6 +113,7 @@ class S_Tetrimnio:
                     if self.first_index.rect.x >= self.settings.right_block_coord:
                         self._move_left_blocks()
                 else:
+                    self.right_collision = True
                     if self.first_index.rect.x >= self.settings.right_block_coord + 20:
                         self._move_left_blocks()
             else:
@@ -123,25 +130,8 @@ class S_Tetrimnio:
             else:
                 for block in self.tetrimino:
                     if block.rect.x >= self.settings.square_bottom_yposition + 20:
-                        block.rect.y += self.settings.tetrimino_speed    
+                        block.rect.y += self.settings.tetrimino_speed 
                     
-    
-    def tetro_collision(self,blocks):
-        if self.last_index.rect.y >= blocks.rect.y:
-            if self.last_index.rect.x == blocks.rect.x-20:
-                self.right_collision = False
-                print(f"blocks rect - {blocks.rect.x}")
-
-
-        
-    def collision_detection(self):
-        for position in self.scanner.scanner_blocks:
-            for blocks in self.scanner.scanner_blocks[position]:
-                if blocks.can_collide_block:
-                    self.tetro_collision(blocks)
-
-
-
     def up_rotation(self):
         if self.settings.up_movement:
             counter = 0
@@ -166,6 +156,47 @@ class S_Tetrimnio:
                 self.can_collide = True
 
             self.settings.up_movement = False
+    
+    def tetro_collision(self,blocks):
+        if not self.second_position:
+            if not self.can_collide:
+                if self.last_index.rect.y >= blocks.rect.y:
+                    self.block_position_collision()
+            else:
+                if self.last_index.rect.y >= blocks.rect.y:
+                    self.block_position_collision2()
+
+    
+    def block_position_collision2(self):
+        position = self.last_index.position1
+        for scanner_block in self.scanner.scanner_blocks[position]:
+            if scanner_block.can_collide_block:
+                if self.last_index.rect.x == scanner_block.rect.x:
+                    self.right_collision = False
+
+
+    def block_position_collision(self):
+        position = self.last_index.position1
+        for scanner_block in self.scanner.scanner_blocks[position]:
+            if scanner_block.can_collide_block:
+                if self.last_index.rect.x == scanner_block.rect.x-20:
+                    self.right_collision = False
+         
+    
+
+
+
+        
+    def collision_detection(self):
+        if not self.second_position:
+            for position in self.scanner.scanner_blocks:
+                for blocks in self.scanner.scanner_blocks[position]:
+                    if blocks.can_collide_block:
+                        self.tetro_collision(blocks)
+
+
+
+
     
 
     def movement(self):
