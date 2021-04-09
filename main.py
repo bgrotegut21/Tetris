@@ -9,7 +9,6 @@ from greyspace import GreyBlock
 from  board import Board
 from tetrimino import S_Tetrimnio
 from scanner import Scanner
-from pseudo_rect import PseudoRect
 
 
 class Main:
@@ -25,14 +24,17 @@ class Main:
         self.board = pygame.sprite.Group()
         self.settings = Settings(self)
         self._create_greyblocks()
+        self.xcollisions = {0:[[]]}
         self.scanner = Scanner(self)
         self.s_tetrimino = S_Tetrimnio(self)
         self.backgroundcolor = self.settings.backgroundcolor
         self.last_time = pygame.time.get_ticks()
         self.create_first_rect = True
         self.pseudo_group = pygame.sprite.Group()
-        
+ 
+        self.ycollisions = {0:[[]]}
         self.current_tetrimino = []
+        self.create_xcollisions()
 
     def check_events(self):
         for event in pygame.event.get():
@@ -40,6 +42,11 @@ class Main:
                 self._check_keydown_events(event.key)
             if event.type == pygame.KEYUP:
                 self._check_keyup_events(event.key)
+
+    def create_xcollisions(self):
+        for num in range(21):
+            self.xcollisions[num] = [[]]
+
 
     def _check_keydown_events(self,event):
         if event == pygame.K_q:
@@ -194,11 +201,24 @@ class Main:
                     block.can_flip = False
                     s_block.can_flip = False
                     s_block.can_collide_block = True
-                    s_block.right_collision = True
                     self.scanner.scanner_blocks[position].add(block)
 
         print(f"Len of scanner blocks {len(self.scanner.scanner_blocks)}")
         self.settings.spawn_tetrimino = True
+
+
+    def add_coordinates(self):
+        for position in self.scanner.scanner_blocks:
+            last_index = len(self.xcollisions[position]) -1
+            for block in self.scanner.scanner_blocks[position]:
+                if block.can_collide_block:
+                    if block.can_add_coord:
+                        block.can_add_coord = False
+                        self.xcollisions[position][last_index].append(block.rect.x)
+                else:
+                    if len(self.xcollisions[position][last_index]) > 0:
+                        self.xcollisions[position].append([])
+
 
     def check_spawn_tetrimino(self):
         if self.settings.spawn_tetrimino:
@@ -218,7 +238,6 @@ class Main:
             collision = block.rect.colliderect(scanner_block.rect)
             if collision:
                 block.position = block.rect
-
 
     def spawn_new_tetrimino(self):
         current_time = pygame.time.get_ticks()
@@ -251,6 +270,7 @@ class Main:
         self.s_tetrimino.auto_movement()
         self.s_tetrimino.find_position()
         self.s_tetrimino.blit_tetrimino()
+        self.add_coordinates()
         self.check_spawn_tetrimino()
 
         pygame.display.flip()

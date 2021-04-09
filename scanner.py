@@ -9,6 +9,7 @@ class Scanner:
         self.scanner_blocks = {0:pygame.sprite.Group()}
         self.make_scanner_row()
         self.last_time = pygame.time.get_ticks()
+        self.xcollisions = game.xcollisions
         
 
     def make_scanner_row(self):
@@ -35,6 +36,8 @@ class Scanner:
 
     def delete_one_row(self,position):
         self.scanner_blocks[position].empty()
+        self.xcollisions[position] = [[]]
+
     
     def clear_scanner_row(self,position):
         self.delete_one_row(position)

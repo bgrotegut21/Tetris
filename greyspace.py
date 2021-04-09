@@ -17,3 +17,4 @@ class GreyBlock(Sprite):
         self.can_flip = True
         self.created_pseudo_rect = False
         self.position1 = 0
+        self.can_add_coord = True
