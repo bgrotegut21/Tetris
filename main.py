@@ -16,7 +16,7 @@ class Main:
     def __init__(self):
         pygame.init()
         pygame.display. set_caption("Tetris")
-        self.screen = pygame.display.set_mode((1920, 900))
+        self.screen = pygame.display.set_mode((1920, 1080))
         self.screen_rect = self.screen.get_rect()
         self.grey_right_blocks = pygame.sprite.Group()
         self.grey_left_blocks = pygame.sprite.Group()
@@ -29,6 +29,8 @@ class Main:
         self.s_tetrimino = S_Tetrimnio(self)
         self.backgroundcolor = self.settings.backgroundcolor
         self.last_time = pygame.time.get_ticks()
+        self.create_first_rect = True
+        self.pseudo_group = pygame.sprite.Group()
         
         self.current_tetrimino = []
 
@@ -174,29 +176,26 @@ class Main:
     def block_collision(self):
         for position in self.scanner.scanner_blocks:
             for block in self.scanner.scanner_blocks[position]:
-                if not block.pseudo_rect:
-                    if block.can_collide_block:
-                        for s_block in self.s_tetrimino.tetrimino:
-                            if s_block.rect.y == block.rect.y -20:
-                                if s_block.rect.x == block.rect.x:
-                                    self.add_blocks()
-
+                if block.can_collide_block:
+                    for s_block in self.s_tetrimino.tetrimino:
+                        if s_block.rect.y == block.rect.y -20:
+                            if s_block.rect.x == block.rect.x:
+                                self.add_blocks()
 
                                 
     def scanner_collision(self,block_rect, block_image):
         for position in self.scanner.scanner_blocks:
             for s_block in self.scanner.scanner_blocks[position]:
-                if not s_block.pseudo_rect:
-                    if s_block.rect == block_rect and s_block.can_flip:
-                        block = GreyBlock(self)
-                        block.image = block_image
-                        block.rect.x = s_block.rect.x
-                        block.rect.y = s_block.rect.y
-                        block.can_flip = False
-                        s_block.can_flip = False
-                        s_block.can_collide_block = True
-                        s_block.right_collision = True
-                        self.scanner.scanner_blocks[position].add(block)
+                if s_block.rect == block_rect and s_block.can_flip:
+                    block = GreyBlock(self)
+                    block.image = block_image
+                    block.rect.x = s_block.rect.x
+                    block.rect.y = s_block.rect.y
+                    block.can_flip = False
+                    s_block.can_flip = False
+                    s_block.can_collide_block = True
+                    s_block.right_collision = True
+                    self.scanner.scanner_blocks[position].add(block)
 
         print(f"Len of scanner blocks {len(self.scanner.scanner_blocks)}")
         self.settings.spawn_tetrimino = True
@@ -234,60 +233,6 @@ class Main:
         self.s_tetrimino.second_position = False
         self.s_tetrimino.can_collide = False
 
-    def create_pseudo_rect(self):
-        rect_position = True
-        rect_width = 0
-        rect_height = 20
-        rect_xcoord = 0
-        rect_ycoord = 0
-        create_block = False
-        for position in self.scanner.scanner_blocks:
-            for blocks in self.scanner.scanner_blocks[position]:
-                if not blocks.pseudo_rect:
-                    if blocks.can_collide_block:
-
-                        if blocks.created_pseudo_rect == False:
-                            print("something")
-                            if rect_position:
-                                rect_xcoord = blocks.rect.x
-                                rect_ycoord = blocks.rect.y
-                                rect_position = False
-                            rect_width += 20
-                            blocks.created_pseudo_rect = True
-                            print(f"len of scanner blocks {position} - {self.scanner.scanner_blocks[position]}")
-                    else:
-                        rect_position = True
-                        create_block = True
-            if create_block:
-                create_block = False
-                self.check_pseudo_rect(rect_width,rect_height,rect_xcoord,rect_ycoord)
-                rect_width = 0
-                rect_xcoord = 0
-                rect_ycoord = 0
-
-    def check_pseudo_rect(self,width,height,xcoord,ycoord):
-        for position in self.scanner.scanner_blocks:
-            for blocks in self.scanner.scanner_blocks[position]:
-                if blocks.pseudo_rect:
-                    if width != blocks.rect.width:
-                        self.make_pseudo_rect(width,height,xcoord,ycoord,position)
-                else:
-                    self.make_pseudo_rect(width,height,xcoord,ycoord,position)
-
-    def make_pseudo_rect(self,width,height,xcoord,ycoord,position):
-        print("It is working")
-        pseudo_rect = PseudoRect(self,width,height)
-        pseudo_rect.rect.x = xcoord
-        pseudo_rect.rect.x = ycoord
-        self.scanner.scanner_blocks[position].add(pseudo_rect)
-            
-        
-    def draw_pseudo_rect(self):
-        for position in self.scanner.scanner_blocks:
-            for block in self.scanner.scanner_blocks[position]:
-                if block.pseudo_rect:
-                    block.draw_pseudo_rect()
-
     def update_game(self):
         self.screen.fill((33,33,33)) 
 
@@ -302,13 +247,11 @@ class Main:
         self.tetrimino_collision()
         self.block_collision()
         self.check_scanner()
-        self.create_pseudo_rect()
         self.s_tetrimino.collision_detection()
         self.s_tetrimino.auto_movement()
         self.s_tetrimino.find_position()
         self.s_tetrimino.blit_tetrimino()
         self.check_spawn_tetrimino()
-        self.draw_pseudo_rect()
 
         pygame.display.flip()
 
