@@ -25,6 +25,7 @@ class Main:
         self.settings = Settings(self)
         self._create_greyblocks()
         self.xcollisions = {0:[[]]}
+        self.ycollisions = {0:[[]]}
         self.scanner = Scanner(self)
         self.s_tetrimino = S_Tetrimnio(self)
         self.backgroundcolor = self.settings.backgroundcolor
@@ -32,9 +33,9 @@ class Main:
         self.create_first_rect = True
         self.pseudo_group = pygame.sprite.Group()
  
-        self.ycollisions = {0:[[]]}
         self.current_tetrimino = []
         self.create_xcollisions()
+        self.create_ycollisions()
 
     def check_events(self):
         for event in pygame.event.get():
@@ -46,7 +47,10 @@ class Main:
     def create_xcollisions(self):
         for num in range(21):
             self.xcollisions[num] = [[]]
-
+    
+    def create_ycollisions(self):
+        for num in range(11):
+            self.ycollisions[num] = [[]]
 
     def _check_keydown_events(self,event):
         if event == pygame.K_q:
@@ -218,7 +222,6 @@ class Main:
                 else:
                     if len(self.xcollisions[position][last_index]) > 0:
                         self.xcollisions[position].append([])
-
 
     def check_spawn_tetrimino(self):
         if self.settings.spawn_tetrimino:

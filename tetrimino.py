@@ -1,3 +1,4 @@
+from typing import Text
 import pygame
 from pygame.sprite import Sprite
 from greyspace import GreyBlock
@@ -153,29 +154,34 @@ class S_Tetrimnio:
 
             self.settings.up_movement = False
     
+
     def tetro_collision(self,blocks):
         if not self.second_position:
             if not self.can_collide:
                 self.right_collision = True
                 self.left_collision = True
-                if self.last_index.rect.y >= blocks.rect.y -20:
+                if self.last_index.rect.y >= blocks.rect.y - 20:
+
                     self.block_position_collision(-20)
-                    self.block_position_collision2(20)
+
             else:
+                if self.last_index.rect.y >= blocks.rect.y -20:
+
+                    self.block_position_collision(-80)
                 self.right_collision = True
                 self.left_collision = True
-                if self.last_index.rect.y >= blocks.rect.y -20:
-                    self.block_position_collision(-80)
 
 
-    def block_position_collision(self,interval):
+    def block_position_collision(self, interval):
         position1 = self.last_index.position1
         for index in range(len(self.xcollisions[position1])):
             if len(self.xcollisions[position1][index]) > 0:
-                if self.last_index.rect.x >= self.xcollisions[position1][index][0] + interval:
-                    self.right_collision = True
+                print(f"last index rect - {self.last_index.rect.x}")
+                if self.last_index.rect.x <= self.xcollisions[position1][index][0] + interval:
+                    self.right_collision = False
                 else:
-                    self.right_collision = False    
+                    self.right_collision = True
+
 
 
 
